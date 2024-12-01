@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="w-full min-h-screen bg-zinc-900">
+      <div class="p-10 text-white">
+        <form action="/create" method="POST">
+          <input
+            type="text"
+            class="block w-full rounded-md outline-none px-5 py-2 bg-zinc-800"
+            placeholder="File name (with extension)"
+            name="title"
+          />
+          <textarea
+            class="block w-full rounded-md outline-none px-5 py-2 bg-zinc-800 resize-none mt-2"
+            placeholder="Write content here"
+            name="description"
+          ></textarea>
+          <input
+            class="mt-2 bg-blue-600 px-5 py-2 rounded-md cursor-pointer"
+            type="submit"
+            value="Create File"
+          />
+        </form>
+      </div>
+      <div class="p-10 flex gap-3 flex-wrap">
+        <% if (files.length > 0) { %>
+          <% files.forEach((file) => { %>
+            <div class="min-w-72 px-3 py-4 rounded-md bg-zinc-800">
+              <h1 class="text-white text-3xl tracking-lighter">
+                <%= file %>
+              </h1>
+              <div class="flex w-full justify-between items-center mt-3">
+                <a class="text-blue-500 inline-block" href="/file/<%= file %>">Read More</a>
+                <a class="text-zinc-500" href="/edit/<%= file %>">Edit file name</a>
+                <form
+                  action="/delete"
+                  method="POST"
+                  class="inline-block"
+                  onsubmit="return confirmDelete('<%= file %>');"
+                >
+                  <input type="hidden" name="fileName" value="<%= file %>">
+                  <button type="submit" class="text-red-500">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <h3 class="text-zinc-600 text-center">No files yet.</h3>
+        <% } %>
+      </div>
+    </div>
+    <script>
+        function confirmDelete(fileName) {
+        return confirm(`Are you sure you want to delete the file "${fileName}"?`);
+      }
+    </script>
+  </body>
+</html>
